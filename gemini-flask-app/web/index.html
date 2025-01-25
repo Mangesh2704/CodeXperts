@@ -1,0 +1,430 @@
+<!-- <!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gemini API</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main>
+    <h1>Gemini API</h1>
+    <form>
+      <div class="prompt-box">
+        <label>
+          <input name="prompt" placeholder="Enter instructions here" type="text"
+            value="">
+        </label>
+        <button type="submit">Go</button>
+      </div>
+    </form>
+    <p class="output">(Results will appear here)</p>
+  </main>
+  <script type="module" src="/main.js"></script>
+  <script src="https://unpkg.com/markdown-it@8.4.2/dist/markdown-it.min.js"></script>
+</body>
+
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Meal Planner</title>
+    <!-- Include Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#4CAF50',
+                        'secondary': '#FF9800',
+                        'light-gray': '#f4f4f4',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Tailwind CSS adjustments */
+        .chatbox {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .recipe-card {
+            background-color: #fff;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 12px;
+        }
+
+        .recipe-card img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .selected-ingredient {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 12px;
+            margin: 2px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .delete-btn {
+            margin-left: 8px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+    <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg mt-10">
+        <h1 class="text-center text-4xl font-bold text-primary mb-4">AI Meal Planner</h1>
+        <p class="text-center text-lg text-gray-600 mb-6">Find meals based on your ingredients and reduce food waste.
+            Let me guide you through the process!</p>
+
+        <!-- Ingredient Search -->
+        <div class="mb-6">
+            <h5 class="text-xl font-semibold text-gray-700 mb-2">Search for Ingredients</h5>
+            <input type="text" id="ingredientSearch"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Search for ingredients...">
+            <ul id="ingredientList" class="mt-2 space-y-2 max-h-40 overflow-y-auto"></ul>
+        </div>
+
+        <!-- Selected Ingredients -->
+        <div id="selectedIngredients" class="mb-6">
+            <h5 class="text-xl font-semibold text-gray-700 mb-2">Selected Ingredients</h5>
+            <div id="selectedIngredientsList" class="flex flex-wrap gap-2">
+                <!-- Selected ingredients will appear here -->
+            </div>
+        </div>
+
+        <!-- Meal Recommendations -->
+        <button id="getRecommendationsBtn"
+            class="w-full py-2 bg-primary text-white rounded-md hover:bg-green-600 transition duration-300">Get Meal
+            Recommendations</button>
+        <div id="recommendations" class="mt-6"></div>
+
+        <!-- Chatbot -->
+        <div class="mt-8">
+            <h5 class="text-xl font-semibold text-gray-700 mb-2">Ask the Assistant</h5>
+            <div class="chatbox bg-light-gray p-4 rounded-md space-y-2" id="chatbox">
+                <p class="bot-msg text-left text-gray-700">Hello! I am your Meal Assistant. How can I help you today?
+                </p>
+            </div>
+            <!-- Prompt Box and Output Styled -->
+<div class="mt-8">
+  <h5 class="text-xl font-semibold text-gray-700 mb-4">Ask the Assistant</h5>
+  <form class="flex flex-col gap-4">
+      <div class="flex items-center bg-light-gray p-4 rounded-md shadow-md">
+          <input
+              name="prompt"
+              placeholder="Enter instructions here"
+              type="text"
+              class="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+          />
+          <button
+              type="submit"
+              class="ml-4 bg-primary text-white px-6 py-2 rounded-md hover:bg-green-600 transition duration-300">
+              Go
+          </button>
+      </div>
+  </form>
+  <p class="output mt-4 bg-gray-100 p-4 rounded-md shadow-md text-gray-700">(Results will appear here)</p>
+</div>
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Ingredient dataset expansion
+        const allIngredients = [
+            // Original Ingredients
+            'pasta', 'tomato sauce', 'cheese', 'lettuce', 'tomato', 'cucumber', 'bread', 'banana', 'bacon', 'milk', 'eggs', 'onion',
+            'garlic', 'chicken', 'spinach', 'carrot', 'avocado', 'potato', 'broccoli', 'beef', 'pork', 'zucchini', 'peppers',
+            'rice', 'flour', 'butter', 'olive oil', 'coconut milk', 'cheddar cheese', 'mozzarella', 'parsley', 'mint', 'oregano',
+
+            // Ingredients from Indian Recipes
+            'yogurt', 'garam masala', 'paneer', 'cauliflower', 'turmeric', 'peas', 'flour', 'spices', 'tomato', 'chickpeas', 'coriander',
+            'cumin', 'chili powder', 'cardamom', 'tandoori masala', 'pav', 'ghee', 'rose water', 'sugar', 'mustard seeds', 'cloves',
+            'bay leaves', 'saffron', 'cinnamon', 'black pepper', 'curry leaves', 'kasuri methi', 'coconut', 'sesame seeds', 'green chilies',
+            'fenugreek', 'lime', 'sweet potato', 'lentils', 'masala', 'ginger', 'garlic paste', 'methi', 'jaggery', 'chana dal',
+            'biryani masala', 'asafetida', 'fennel seeds', 'poppy seeds', 'gajjar', 'naan flour', 'mango powder', 'mustard oil', 'tamarind',
+            'avocado', 'zucchini', 'mint leaves', 'sambar powder', 'ajwain', 'rava', 'sago', 'amchur', 'sugar syrup', 'chana masala', 'cream'
+        ];
+
+
+        let selectedIngredients = [];
+
+        // Expanded Recipe dataset
+        const recipes = [
+            { name: "Pasta Carbonara", ingredients: ['pasta', 'cheese', 'eggs', 'bacon'], image: "https://www.allrecipes.com/thmb/Vg2cRidr2zcYhWGvPD8M18xM_WY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/11973-spaghetti-carbonara-ii-DDMFS-4x3-6edea51e421e4457ac0c3269f3be5157.jpg", instructions: "Cook pasta. Fry bacon. Mix with cheese and eggs." },
+            { name: "Tomato Salad", ingredients: ['tomato', 'cucumber', 'lettuce', 'olive oil'], image: "https://via.placeholder.com/120", instructions: "Chop tomatoes and cucumber. Mix with lettuce and olive oil." },
+            { name: "Chicken Stir Fry", ingredients: ['chicken', 'rice', 'broccoli', 'garlic'], image: "https://via.placeholder.com/120", instructions: "Stir fry chicken and garlic. Add broccoli and serve with rice." },
+            { name: "Beef Stew", ingredients: ['beef', 'carrot', 'potato', 'onion'], image: "https://via.placeholder.com/120", instructions: "Cook beef, carrots, potatoes, and onions in a pot." },
+            { name: "Cheese Omelette", ingredients: ['cheese', 'eggs', 'butter'], image: "https://via.placeholder.com/120", instructions: "Whisk eggs, cook in butter, and add cheese." },
+
+                   ];
+
+        // Handle ingredient search
+        $('#ingredientSearch').on('keyup', function () {
+            let searchTerm = $(this).val().toLowerCase();
+            let filteredIngredients = allIngredients.filter(ingredient => ingredient.toLowerCase().includes(searchTerm));
+
+            $('#ingredientList').empty();
+            filteredIngredients.forEach(ingredient => {
+                $('#ingredientList').append(`<li class="cursor-pointer p-2 rounded-md hover:bg-primary hover:text-white transition duration-200">${ingredient}</li>`);
+            });
+        });
+
+        // Add selected ingredient to the selected list
+        $('#ingredientList').on('click', 'li', function () {
+            let ingredient = $(this).text();
+            if (!selectedIngredients.includes(ingredient)) {
+                selectedIngredients.push(ingredient);
+                $('#selectedIngredientsList').append(`
+                    <span class="selected-ingredient">
+                        ${ingredient}
+                        <span class="delete-btn" onclick="removeIngredient('${ingredient}')">X</span>
+                    </span>
+                `);
+            }
+        });
+
+        // Remove ingredient from selected list
+        function removeIngredient(ingredient) {
+            selectedIngredients = selectedIngredients.filter(i => i !== ingredient);
+            $('#selectedIngredientsList').empty();
+            selectedIngredients.forEach(i => {
+                $('#selectedIngredientsList').append(`
+                    <span class="selected-ingredient">
+                        ${i}
+                        <span class="delete-btn" onclick="removeIngredient('${i}')">X</span>
+                    </span>
+                `);
+            });
+        }
+
+        // Get meal recommendations based on selected ingredients
+        $('#getRecommendationsBtn').click(function () {
+            if (selectedIngredients.length === 0) {
+                $('#recommendations').html('Please select some ingredients first.');
+                return;
+            }
+
+            const matchedRecipes = recipes.filter(recipe => {
+                return recipe.ingredients.every(ingredient => selectedIngredients.includes(ingredient));
+            });
+
+            if (matchedRecipes.length > 0) {
+                let mealList = '';
+                matchedRecipes.forEach(recipe => {
+                    mealList += `
+                        <div class="recipe-card">
+                            <img src="${recipe.image}" alt="${recipe.name}" />
+                            <div>
+                                <h6 class="text-xl font-semibold">${recipe.name}</h6>
+                                <p class="text-gray-600">Ingredients: ${recipe.ingredients.join(', ')}</p>
+                                <p class="text-gray-500">Instructions: ${recipe.instructions}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+                $('#recommendations').html(mealList);
+            } else {
+                $('#recommendations').html('No meal recommendations found based on your selected ingredients.');
+            }
+        });
+
+        // Chatbot interaction
+        $('#sendBtn').click(function () {
+            let userMessage = $('#userInput').val();
+            if (userMessage) {
+                $('#chatbox').append(`<p class="user-msg text-right text-green-600">${userMessage}</p>`);
+                $('#userInput').val('');
+                $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);  // Scroll to the bottom
+
+                setTimeout(() => {
+                    let botReply = getBotResponse(userMessage);
+                    $('#chatbox').append(`<p class="bot-msg text-left text-gray-700">${botReply}</p>`);
+                    $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);  // Scroll to the bottom
+                }, 1000);
+            }
+        });
+
+        // Bot response based on user query
+        function getBotResponse(userMessage) {
+            // Store and preservation tips
+            if (userMessage.toLowerCase().includes("how to store") || userMessage.toLowerCase().includes("store") || userMessage.toLowerCase().includes("preserve")) {
+                return "To store ingredients properly, it’s best to keep fruits and vegetables in the fridge, while dry ingredients like pasta should be kept in a cool, dry place. Would you like more tips?";
+            }
+
+            // Shelf life of ingredients
+            if (userMessage.toLowerCase().includes("how long") || userMessage.toLowerCase().includes("last")) {
+                return "The shelf life of ingredients depends on storage. For example, eggs last 3-5 weeks in the fridge, while lettuce should be consumed within a week for freshness.";
+            }
+
+            // General meal suggestions
+            if (userMessage.toLowerCase().includes("recipe") || userMessage.toLowerCase().includes("meal") || userMessage.toLowerCase().includes("dinner")) {
+                return "I can suggest some simple meals! How about trying a vegetable stir-fry or a quick pasta dish with tomato sauce and herbs?";
+            }
+
+            // Healthy diet advice
+            if (userMessage.toLowerCase().includes("healthy") || userMessage.toLowerCase().includes("nutrition") || userMessage.toLowerCase().includes("diet")) {
+                return "For a healthy diet, try to balance your meals with lean proteins, whole grains, plenty of vegetables, and healthy fats. Would you like more tips on healthy eating?";
+            }
+
+            // Food waste reduction tips
+            if (userMessage.toLowerCase().includes("food waste") || userMessage.toLowerCase().includes("sustainability") || userMessage.toLowerCase().includes("reduce waste")) {
+                return "To reduce food waste, try to plan your meals ahead of time, buy in small quantities, and use leftovers creatively. You can also compost food scraps!";
+            }
+
+            // Ingredient substitutions
+            if (userMessage.toLowerCase().includes("substitute") || userMessage.toLowerCase().includes("replace") || userMessage.toLowerCase().includes("alternative")) {
+                return "If you're missing an ingredient, don't worry! For example, you can substitute yogurt for sour cream or use applesauce in place of butter in baked goods.";
+            }
+
+            // Cooking techniques advice
+            if (userMessage.toLowerCase().includes("how to cook") || userMessage.toLowerCase().includes("cook") || userMessage.toLowerCase().includes("recipe")) {
+                return "There are so many cooking methods to explore! For beginners, I recommend trying sautéing vegetables or making a simple stir-fry. Want more cooking tips?";
+            }
+
+            // Quick meal ideas
+            if (userMessage.toLowerCase().includes("quick meal") || userMessage.toLowerCase().includes("fast meal") || userMessage.toLowerCase().includes("easy meal")) {
+                return "For a quick meal, try a microwaveable mug omelette or a 10-minute pasta with garlic and olive oil. Need more quick meal ideas?";
+            }
+
+            // Food safety tips
+            if (userMessage.toLowerCase().includes("food safety") || userMessage.toLowerCase().includes("safe") || userMessage.toLowerCase().includes("spoil")) {
+                return "To ensure food safety, always refrigerate perishables promptly, keep raw meats separate from ready-to-eat foods, and cook items to their proper temperature.";
+            }
+
+            // Cooking times for common ingredients
+            if (userMessage.toLowerCase().includes("cook time") || userMessage.toLowerCase().includes("how long to cook")) {
+                return "Cooking times vary depending on the ingredient. For example, chicken breasts take around 20-30 minutes, while vegetables like broccoli only take 5-7 minutes to steam.";
+            }
+
+            // Best cooking oils
+            if (userMessage.toLowerCase().includes("best oil") || userMessage.toLowerCase().includes("cooking oil")) {
+                return "Olive oil is great for sautéing and dressings, while canola oil is perfect for frying due to its high smoke point. Avocado oil is also a healthy option!";
+            }
+
+            // Healthy snack ideas
+            if (userMessage.toLowerCase().includes("snack") || userMessage.toLowerCase().includes("healthy snack")) {
+                return "Healthy snacks include nuts, fruits, hummus with veggies, or Greek yogurt with honey. Need more snack ideas?";
+            }
+
+            // How to prepare fruits and vegetables
+            if (userMessage.toLowerCase().includes("prepare fruit") || userMessage.toLowerCase().includes("prepare vegetable")) {
+                return "For fruits, it's best to wash them right before eating. For veggies, try steaming or roasting for the best flavor and texture.";
+            }
+
+            // How to make meals more flavorful
+            if (userMessage.toLowerCase().includes("flavor") || userMessage.toLowerCase().includes("taste better")) {
+                return "To enhance flavors, use fresh herbs like basil, oregano, and rosemary, or try adding spices like cumin and paprika. A squeeze of lemon can also brighten up many dishes!";
+            }
+
+            // Baking tips
+            if (userMessage.toLowerCase().includes("baking") || userMessage.toLowerCase().includes("bake")) {
+                return "When baking, always preheat your oven and measure ingredients precisely. If you're out of eggs, try a flaxseed or chia egg substitute!";
+            }
+
+            // How to prepare a balanced meal
+            if (userMessage.toLowerCase().includes("balanced meal") || userMessage.toLowerCase().includes("balanced diet")) {
+                return "A balanced meal typically includes a source of protein (like chicken, beans, or tofu), healthy carbs (like whole grains), and plenty of vegetables.";
+            }
+
+            // Substitutes for gluten-free or dairy-free diets
+            if (userMessage.toLowerCase().includes("gluten-free") || userMessage.toLowerCase().includes("dairy-free")) {
+                return "For a gluten-free diet, try rice, quinoa, or gluten-free pasta. For dairy-free, opt for plant-based milks like almond or oat milk.";
+            }
+
+            // Vegan meal ideas
+            if (userMessage.toLowerCase().includes("vegan") || userMessage.toLowerCase().includes("plant-based")) {
+                return "For a vegan meal, try making a vegetable curry with chickpeas or a hearty lentil stew. You can also enjoy plant-based burgers made from black beans!";
+            }
+
+            // How to reheat leftovers
+            if (userMessage.toLowerCase().includes("reheat") || userMessage.toLowerCase().includes("leftovers")) {
+                return "To reheat leftovers, use a microwave for quick meals or an oven to retain texture, especially for items like pizza or roasted veggies.";
+            }
+
+            // Meal prepping tips
+            if (userMessage.toLowerCase().includes("meal prep") || userMessage.toLowerCase().includes("meal planning")) {
+                return "Meal prepping involves cooking in bulk and storing meals in portions for the week. Try prepping rice, grilled chicken, and roasted vegetables for easy lunches!";
+            }
+
+            // Cooking for a family
+            if (userMessage.toLowerCase().includes("family meal") || userMessage.toLowerCase().includes("cook for family")) {
+                return "For family meals, try making casseroles, one-pot pasta dishes, or taco nights that everyone can customize to their liking!";
+            }
+
+            // How to portion meals
+            if (userMessage.toLowerCase().includes("portion meals") || userMessage.toLowerCase().includes("portion control")) {
+                return "For proper portion control, use smaller plates, measure grains like rice or pasta, and try filling half of your plate with vegetables.";
+            }
+
+            // How to make homemade sauces
+            if (userMessage.toLowerCase().includes("homemade sauce") || userMessage.toLowerCase().includes("make sauce")) {
+                return "Making homemade sauces is easy! For a basic tomato sauce, sauté garlic and onions, then add crushed tomatoes, salt, and herbs like basil or oregano.";
+            }
+
+            // Storing leftovers
+            if (userMessage.toLowerCase().includes("store leftovers") || userMessage.toLowerCase().includes("leftover storage")) {
+                return "Store leftovers in airtight containers and refrigerate them promptly. Most leftovers stay good for 3-4 days in the fridge.";
+            }
+
+            // Common cooking mistakes
+            if (userMessage.toLowerCase().includes("cooking mistake") || userMessage.toLowerCase().includes("error")) {
+                return "Some common cooking mistakes include overcooking meat, not seasoning enough, and not allowing dough to rest. Don't worry – practice makes perfect!";
+            }
+
+            // Cooking on a budget
+            if (userMessage.toLowerCase().includes("budget") || userMessage.toLowerCase().includes("cheap meals")) {
+                return "Cooking on a budget is easy! Try using inexpensive ingredients like rice, beans, eggs, and frozen vegetables. A stir-fry or soup can go a long way!";
+            }
+
+            // Expired food
+            if (userMessage.toLowerCase().includes("expired food") || userMessage.toLowerCase().includes("eat expired")) {
+                return "Check the expiration dates on food, and trust your senses. If something smells, looks, or tastes off, it's best to discard it, even if it's slightly past its expiration date.";
+            }
+
+            // Kitchen essentials
+            if (userMessage.toLowerCase().includes("kitchen essentials") || userMessage.toLowerCase().includes("must-have kitchen items")) {
+                return "Some kitchen essentials include a good chef’s knife, cutting boards, pots, pans, a blender, and measuring spoons and cups.";
+            }
+
+            // Default response
+            return "I'm still learning! How else can I assist you with your meals?";
+        }
+
+    </script>
+    <script type="module" src="/main.js"></script>
+    <script src="https://unpkg.com/markdown-it@8.4.2/dist/markdown-it.min.js"></script>
+</body>
+
+</html>
