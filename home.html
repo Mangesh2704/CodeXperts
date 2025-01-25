@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- ***** Welcome Area Start ***** -->
+<section class="welcome-area">
+  <!-- Welcome Slides -->
+  <div class="welcome-slides owl-carousel">
+    <!-- Single Welcome Slide -->
+    <div class="welcome-welcome-slide bg-img bg-gradient-overlay jarallax"
+      style="background-image: url({% static 'website/img/bg-img/nocrumbs-slider1.jpg' %});">
+      <div class="container h-100">
+        <div class="row h-100 align-items-center">
+          <div class="col-12">
+            <!-- Welcome Text -->
+            <div class="welcome-text text-center">
+              <h2 data-animation="fadeInUp" data-delay="100ms">Welcome to NoCrumbs</h2>
+              <p data-animation="fadeInUp" data-delay="300ms">Our mission is to create a world where food is valued,
+                abundance meets
+                need, and hunger is eradicated through innovation and collaboration.</p>
+              <div class="welcome-btn-group">
+                <a href="#" class="btn dento-btn mx-2" data-animation="fadeInUp" data-delay="500ms">Get Started</a>
+                <a href="{% url 'contact' %}" class="btn dento-btn mx-2 active" data-animation="fadeInUp"
+                  data-delay="700ms">Contact
+                  Us</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Single Welcome Slide -->
+    <div class="welcome-welcome-slide bg-img bg-gradient-overlay jarallax"
+      style="background-image: url({% static 'website/img/bg-img/nocrumbs-slider2.jpg' %});">
+      <div class="container h-100">
+        <div class="row h-100 align-items-center">
+          <div class="col-12">
+            <!-- Welcome Text -->
+            <div class="welcome-text text-center">
+              <h2 data-animation="fadeInDown" data-delay="100ms">Annadan Shresthdan</h2>
+              <p data-animation="fadeInDown" data-delay="300ms">Reducing food waste by redistributing surplus food to
+                ensure no one goes hungry and everyone has access to nutritious meals.</p>
+              <div class="welcome-btn-group">
+                <a href="#" class="btn dento-btn mx-2" data-animation="fadeInDown" data-delay="500ms">Get Started</a>
+                <a href="{% url 'contact' %}" class="btn dento-btn mx-2 active" data-animation="fadeInDown"
+                  data-delay="700ms">Contact
+                  Us</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ***** Welcome Area End ***** -->
+
+<!-- ****** Ministry and Scheme Area Start ******* -->
+<section class="dento-about-us-area section-padding-100-0">
+  <div id="awareness" class="container">
+    <div class="section-heading">
+      <h2>Food Safety and Standards Authority of India (FSSAI)</h2>
+      <div class="line"></div>
+    </div>
+    <div class="row align-items-center">
+      <!-- FSSAI Content -->
+      <div class="col-12 col-md-6">
+        <div class="about-us-content mb-50">
+          <p style="font-size: 20px;">
+            Food Safety and Standards Authority of India (FSSAI) plays a key role not only in food safety and hygiene
+            but also in ensuring availability of wholesome food and encouraging citizens to eat the right foods.
+            <br>
+          </p>
+        </div>
+      </div>
+      <!-- FSSAI Thumbnail -->
+      <div class="col-12 col-md-6">
+        <div class="about-us-thumbnail mb-50">
+          <img src="{% static 'website/img/bg-img/FSSAI_logo.png' %}" alt="" style="width: 350px; height: auto;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .col-12.col-md-6 {
+      flex: 1;
+    }
+
+    .about-us-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .about-us-thumbnail {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .about-us-thumbnail img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</section>
+
+<section class="dento-about-us-area section-padding-95-0">
+  <div class="container">
+    <div class="section-heading">
+      <h2>Indian Food Sharing Alliance (IFSA)</h2>
+      <div class="line"></div>
+    </div>
+    <div class="row align-items-center">
+      <!-- Ministry Thumbnail -->
+      <div class="col-12 col-md-6">
+        <div class="about-us-thumbnail mb-50">
+          <img style="width: 400px;" src="{% static 'website/img/bg-img/IFSA_logo.png' %}" alt="">
+        </div>
+      </div>
+      <!-- Ministry Content -->
+      <div class="col-12 col-md-6">
+        <div class="about-us-content mb-50">
+          <!-- Section Heading -->
+          <!-- <div class="section-heading">
+            <h2>About Us</h2>
+            <div class="line"></div>
+          </div> -->
+          <p>The Indian Food Sharing Alliance, (IFSA) is a social initiative by the Food Safety and Standards Authority
+            of India (FSSAI) to help solve India’s food waste and hunger crisis by integrating various partner
+            organizations, Food Recovery Agencies and NGO’s.
+            <br>
+          </p>
+
+          <p style="font-weight: bold; font-size: 20px; color: black;"> Aims and Objectives:</p>
+
+          <!-- Single Skills Area -->
+          <div class="single-skills-area mt-25">
+            <h6 style="font-size: 18px;">◉ Care:<b style="font-weight: 400; font-size: 15px;"> Reduce food wastage by
+                redistributing surplus to
+                the needy. </b>
+            </h6>
+            <h6 style="font-size: 18px;">◉ Aware:<b style="font-weight: 400; font-size: 15px;"> Raise awareness about
+                food wastage through
+                nationwide programs. </b>
+            </h6>
+            <h6 style="font-size: 18px;">◉ Share:<b style="font-weight: 400; font-size: 15px;"> Connect trained agencies
+                with food chains for
+                safe distribution of surplus. </b>
+            </h6>
+            <h6 style="font-size: 18px;">◉ Prepare:<b style="font-weight: 400; font-size: 15px;"> Educate food
+                businesses on best practices to
+                prevent food loss. </b>
+            </h6>
+            <h6 style="font-size: 18px;">◉ Declare:<b style="font-weight: 400; font-size: 15px;"> Support policies and
+                programs that reduce
+                food
+                loss and waste. </b>
+            </h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ****** Ministry and Scheme Area End ****** -->
+
+
+<!-- Food Banks Near Us -->
+<section class="dentist-area section-padding-90-0">
+  <div class="container">
+    <div class="row">
+      <!-- Section Heading -->
+      <div class="col-12">
+        <div class="section-heading">
+          <h2 id="#foodbanks">Food Banks Near Us:</h2>
+          <div class="line"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="google-maps mb-100">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d120679.2234281829!2d72.80444172573384!3d19.053810358009!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sfood%20banks%20near%20me%20map!5e0!3m2!1sen!2sin!4v1737795551500!5m2!1sen!2sin"
+            width="900" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+</section>
+<!-- Food Banks Near Us -->
+
+<!-- ***** About Us Area ***** -->
+<section class="dentist-area section-padding-90-0">
+  <div class="container">
+    <div class="row">
+      <!-- Section Heading -->
+      <div class="col-12">
+        <div class="section-heading">
+          <h2>About Us</h2>
+          <div class="line"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- About Us Area -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <div class="single-dentist-area mb-100">
+          <img src="{% static 'website/img/bg-img/about1.jpg' %}" alt="">
+          <!-- About Content -->
+          <div class="dentist-content">
+            <!-- Social Info -->
+            <div class="dentist-social-info">
+              <a href="#"><i class="fa fa-facebook"></i></a>
+              <a href="#"><i class="fa fa-twitter"></i></a>
+              <a href="#"><i class="fa fa-google-plus"></i></a>
+            </div>
+            <!-- Person Info -->
+            <div class="dentist-info bg-gradient-overlay">
+              <h5>Mangesh Pangam</h5>
+              <p>Frontend Developer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- About Us Area -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <div class="single-dentist-area mb-100">
+          <img src="{% static 'website/img/bg-img/about2.jpg' %}" alt="">
+          <!-- About Content -->
+          <div class="dentist-content">
+            <!-- Social Info -->
+            <div class="dentist-social-info">
+              <a href="#"><i class="fa fa-facebook"></i></a>
+              <a href="#"><i class="fa fa-twitter"></i></a>
+              <a href="#"><i class="fa fa-google-plus"></i></a>
+            </div>
+            <!-- Person Info -->
+            <div class="dentist-info bg-gradient-overlay">
+              <h5>Rakshita Sarap</h5>
+              <p>Research and Development Head</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- About Us Area -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <div class="single-dentist-area mb-100">
+          <img src="{% static 'website/img/bg-img/about3.jpg' %}" alt="">
+          <!-- About Content -->
+          <div class="dentist-content">
+            <!-- Social Info -->
+            <div class="dentist-social-info">
+              <a href="#"><i class="fa fa-facebook"></i></a>
+              <a href="#"><i class="fa fa-twitter"></i></a>
+              <a href="#"><i class="fa fa-google-plus"></i></a>
+            </div>
+            <!-- Person Info -->
+            <div class="dentist-info bg-gradient-overlay">
+              <h5>Saish Rane</h5>
+              <p>Backend Developer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<section class="dentist-area section-padding-70-0">
+  <div class="container">
+    <div class="row">
+      <!-- Section Heading -->
+      <div class="col-12">
+        <div class="section-heading">
+          <h2>Problem Statement</h2>
+          <div class="line"></div>
+        </div>
+      </div>
+    </div>
+    <h6 style="font-weight: normal;">
+      The high cost of branded medications remains a significant barrier to healthcare access, leading to financial
+      strain and health disparities. To address this issue, the Janaushadhi portal aims to enhance accessibility and
+      affordability by recommending high-quality generic alternatives to expensive branded drugs. By developing a
+      robust recommendation system that matches branded medicines with their cost-effective generic counterparts based
+      on active pharmaceutical ingredients, and by providing users with a user-friendly interface and educational
+      resources, the portal seeks to increase awareness, improve medication adherence, and ultimately reduce patient
+      expenditures. This initiative will ensure that patients have access to affordable, reliable, and effective
+      treatments, promoting equity in healthcare and alleviating financial burdens.
+    </h6>
+  </div>
+</section>
+<br>
+<br>
+<!-- ***** About Us Area End ***** -->
+{% endblock %}
