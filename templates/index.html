@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Meal Planner</title>
+    <!-- Include Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#4CAF50',
+                        'secondary': '#FF9800',
+                        'light-gray': '#f4f4f4',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Tailwind CSS adjustments */
+        .chatbox {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .recipe-card {
+            background-color: #fff;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 12px;
+        }
+
+        .recipe-card img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .selected-ingredient {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 12px;
+            margin: 2px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .delete-btn {
+            margin-left: 8px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+    <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg mt-10">
+        <h1 class="text-center text-4xl font-bold text-primary mb-4">AI Meal Planner</h1>
+        <p class="text-center text-lg text-gray-600 mb-6">Find meals based on your ingredients and reduce food waste.
+            Let me guide you through the process!</p>
+
+        <!-- Ingredient Search -->
+        <div class="mb-6">
+            <h5 class="text-xl font-semibold text-gray-700 mb-2">Search for Ingredients</h5>
+            <input type="text" id="ingredientSearch"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Search for ingredients...">
+            <ul id="ingredientList" class="mt-2 space-y-2 max-h-40 overflow-y-auto"></ul>
+        </div>
+
+        <!-- Selected Ingredients -->
+        <div id="selectedIngredients" class="mb-6">
+            <h5 class="text-xl font-semibold text-gray-700 mb-2">Selected Ingredients</h5>
+            <div id="selectedIngredientsList" class="flex flex-wrap gap-2">
+                <!-- Selected ingredients will appear here -->
+            </div>
+        </div>
+
+        <!-- Meal Recommendations -->
+        <button id="getRecommendationsBtn"
+            class="w-full py-2 bg-primary text-white rounded-md hover:bg-green-600 transition duration-300">Get Meal
+            Recommendations</button>
+        <div id="recommendations" class="mt-6"></div>
+
+        <!-- Chatbot -->
+        <div class="mt-8">
+            <h5 class="text-xl font-semibold text-gray-700 mb-2">Ask the Assistant</h5>
+            <div class="chatbox bg-light-gray p-4 rounded-md space-y-2" id="chatbox">
+                <p class="bot-msg text-left text-gray-700">Hello! I am your Meal Assistant. How can I help you today?
+                </p>
+            </div>
+            <div class="mt-4 flex">
+                <input type="text" id="userInput"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="Type your question here...">
+                <button id="sendBtn"
+                    class="px-4 py-2 bg-primary text-white rounded-r-md hover:bg-green-600 transition duration-300">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Ingredient dataset expansion
+        const allIngredients = [
+            // Original Ingredients
+            'pasta', 'tomato sauce', 'cheese', 'lettuce', 'tomato', 'cucumber', 'bread', 'banana', 'bacon', 'milk', 'eggs', 'onion',
+            'garlic', 'chicken', 'spinach', 'carrot', 'avocado', 'potato', 'broccoli', 'beef', 'pork', 'zucchini', 'peppers',
+            'rice', 'flour', 'butter', 'olive oil', 'coconut milk', 'cheddar cheese', 'mozzarella', 'parsley', 'mint', 'oregano',
+
+            // Ingredients from Indian Recipes
+            'yogurt', 'garam masala', 'paneer', 'cauliflower', 'turmeric', 'peas', 'flour', 'spices', 'tomato', 'chickpeas', 'coriander',
+            'cumin', 'chili powder', 'cardamom', 'tandoori masala', 'pav', 'ghee', 'rose water', 'sugar', 'mustard seeds', 'cloves',
+            'bay leaves', 'saffron', 'cinnamon', 'black pepper', 'curry leaves', 'kasuri methi', 'coconut', 'sesame seeds', 'green chilies',
+            'fenugreek', 'lime', 'sweet potato', 'lentils', 'masala', 'ginger', 'garlic paste', 'methi', 'jaggery', 'chana dal',
+            'biryani masala', 'asafetida', 'fennel seeds', 'poppy seeds', 'gajjar', 'naan flour', 'mango powder', 'mustard oil', 'tamarind',
+            'avocado', 'zucchini', 'mint leaves', 'sambar powder', 'ajwain', 'rava', 'sago', 'amchur', 'sugar syrup', 'chana masala', 'cream'
+        ];
+
+
+        let selectedIngredients = [];
+
+        // Expanded Recipe dataset
+        const recipes = [
+            { name: "Pasta Carbonara", ingredients: ['pasta', 'cheese', 'eggs', 'bacon'], image: "https://www.allrecipes.com/thmb/Vg2cRidr2zcYhWGvPD8M18xM_WY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/11973-spaghetti-carbonara-ii-DDMFS-4x3-6edea51e421e4457ac0c3269f3be5157.jpg", instructions: "Cook pasta. Fry bacon. Mix with cheese and eggs." },
+            { name: "Tomato Salad", ingredients: ['tomato', 'cucumber', 'lettuce', 'olive oil'], image: "https://via.placeholder.com/120", instructions: "Chop tomatoes and cucumber. Mix with lettuce and olive oil." },
+            { name: "Chicken Stir Fry", ingredients: ['chicken', 'rice', 'broccoli', 'garlic'], image: "https://via.placeholder.com/120", instructions: "Stir fry chicken and garlic. Add broccoli and serve with rice." },
+            { name: "Beef Stew", ingredients: ['beef', 'carrot', 'potato', 'onion'], image: "https://via.placeholder.com/120", instructions: "Cook beef, carrots, potatoes, and onions in a pot." },
+            { name: "Cheese Omelette", ingredients: ['cheese', 'eggs', 'butter'], image: "https://via.placeholder.com/120", instructions: "Whisk eggs, cook in butter, and add cheese." },
+
+            // New Recipes
+            { name: "Butter Chicken", ingredients: ['chicken', 'garam masala', 'yogurt', 'cream'], image: "https://images.immediate.co.uk/production/volatile/sites/30/2021/02/butter-chicken-ac2ff98.jpg?quality=90&resize=440,400", instructions: "Cook chicken with garam masala, yogurt, and cream to make a rich gravy." },
+            { name: "Palak Paneer", ingredients: ['paneer', 'spinach', 'garlic', 'onion'], image: "https://via.placeholder.com/120", instructions: "Cook spinach, blend into a paste, and cook with paneer and spices." },
+            { name: "Dal Tadka", ingredients: ['lentils', 'garlic', 'cumin', 'onion'], image: "https://via.placeholder.com/120", instructions: "Cook lentils and add fried garlic, cumin, and onions for flavor." },
+            { name: "Chana Masala", ingredients: ['chickpeas', 'tomato', 'garam masala', 'onion'], image: "https://via.placeholder.com/120", instructions: "Cook chickpeas with tomato and spices to make a hearty curry." },
+            { name: "Aloo Gobi", ingredients: ['potato', 'cauliflower', 'cumin', 'garam masala'], image: "https://via.placeholder.com/120", instructions: "Cook potatoes and cauliflower with spices like cumin and garam masala." },
+
+            { name: "Tandoori Chicken", ingredients: ['chicken', 'yogurt', 'garam masala', 'lime'], image: "https://via.placeholder.com/120", instructions: "Marinate chicken in yogurt and spices, then grill." },
+            { name: "Chicken Biryani", ingredients: ['chicken', 'rice', 'onion', 'garam masala'], image: "https://via.placeholder.com/120", instructions: "Layer cooked chicken and rice with biryani spices." },
+            { name: "Pav Bhaji", ingredients: ['bread', 'potato', 'tomato', 'spices'], image: "https://via.placeholder.com/120", instructions: "Make a spicy vegetable mash and serve with toasted bread." },
+            { name: "Dosas", ingredients: ['rice flour', 'urad dal', 'tamarind', 'mustard seeds'], image: "https://via.placeholder.com/120", instructions: "Make a thin batter from rice and dal, cook on a griddle." },
+            { name: "Samosas", ingredients: ['potato', 'peas', 'spices', 'flour'], image: "https://via.placeholder.com/120", instructions: "Fill pastry with spiced potato and peas, then fry." },
+
+            { name: "Paneer Butter Masala", ingredients: ['paneer', 'tomato', 'butter', 'cream'], image: "https://via.placeholder.com/120", instructions: "Cook paneer in a rich tomato gravy with butter and cream." },
+            { name: "Matar Pulao", ingredients: ['rice', 'peas', 'garam masala', 'onion'], image: "https://via.placeholder.com/120", instructions: "Cook rice with peas and aromatic spices." },
+            { name: "Rogan Josh", ingredients: ['lamb', 'yogurt', 'garam masala', 'onion'], image: "https://via.placeholder.com/120", instructions: "Cook lamb in a yogurt-based gravy with spices." },
+            { name: "Kadai Paneer", ingredients: ['paneer', 'bell peppers', 'onion', 'tomato'], image: "https://via.placeholder.com/120", instructions: "Cook paneer with bell peppers and onion in a spicy curry." },
+            { name: "Bhindi Masala", ingredients: ['okra', 'onion', 'tomato', 'garam masala'], image: "https://via.placeholder.com/120", instructions: "Cook okra with onions and spices until crispy." },
+
+            { name: "Masoor Dal", ingredients: ['red lentils', 'garam masala', 'onion', 'tomato'], image: "https://via.placeholder.com/120", instructions: "Cook red lentils and temper with garam masala and onions." },
+            { name: "Methi Thepla", ingredients: ['fenugreek', 'wheat flour', 'yogurt', 'spices'], image: "https://via.placeholder.com/120", instructions: "Make a dough with fenugreek leaves and roll out thin flatbreads." },
+            { name: "Kadhi Pakora", ingredients: ['yogurt', 'chickpea flour', 'spices', 'onion'], image: "https://via.placeholder.com/120", instructions: "Make fritters from chickpea flour and cook in a yogurt gravy." },
+            { name: "Chicken Korma", ingredients: ['chicken', 'cashews', 'cream', 'onion'], image: "https://via.placeholder.com/120", instructions: "Cook chicken in a creamy gravy with cashews." },
+            { name: "Gulab Jamun", ingredients: ['milk powder', 'sugar', 'flour', 'rose water'], image: "https://via.placeholder.com/120", instructions: "Fry dough balls and soak them in sugar syrup." },
+
+            { name: "Shahi Paneer", ingredients: ['paneer', 'cream', 'saffron', 'onion'], image: "https://via.placeholder.com/120", instructions: "Cook paneer in a rich gravy with cream and saffron." },
+            { name: "Pulao", ingredients: ['rice', 'cumin', 'cardamom', 'onion'], image: "https://via.placeholder.com/120", instructions: "Cook rice with aromatic spices like cardamom and cumin." },
+            { name: "Kebabs", ingredients: ['minced meat', 'garam masala', 'onion', 'yogurt'], image: "https://via.placeholder.com/120", instructions: "Grill or pan-fry spiced minced meat kebabs." },
+            { name: "Momos", ingredients: ['dumpling wrapper', 'cabbage', 'onion', 'carrot'], image: "https://via.placeholder.com/120", instructions: "Stuff dumpling wrappers with spiced veggies or meat and steam." },
+            { name: "Bhel Puri", ingredients: ['puffed rice', 'onion', 'tomato', 'sev'], image: "https://via.placeholder.com/120", instructions: "Mix puffed rice with veggies, chutneys, and sev." },
+
+            { name: "Aloo Tikki", ingredients: ['potato', 'peas', 'garam masala', 'onion'], image: "https://via.placeholder.com/120", instructions: "Make spiced potato patties and shallow fry them." },
+            { name: "Rajma", ingredients: ['kidney beans', 'tomato', 'garam masala', 'onion'], image: "https://via.placeholder.com/120", instructions: "Cook kidney beans in a tomato-based curry with spices." },
+            { name: "Pesarattu", ingredients: ['green gram', 'onion', 'ginger', 'green chilies'], image: "https://via.placeholder.com/120", instructions: "Blend green gram and spices, then cook as savory pancakes." },
+            { name: "Sev Puri", ingredients: ['puri', 'sev', 'onion', 'coriander'], image: "https://via.placeholder.com/120", instructions: "Top crispy puris with chutneys, onions, and sev." },
+            { name: "Tandoori Roti", ingredients: ['whole wheat flour', 'yeast', 'yogurt', 'water'], image: "https://via.placeholder.com/120", instructions: "Bake the dough in a tandoor until crisp." },
+
+            { name: "Biryani", ingredients: ['rice', 'chicken', 'onion', 'spices'], image: "https://via.placeholder.com/120", instructions: "Layer cooked rice and chicken in a pot, and cook them together." },
+            { name: "Vada Pav", ingredients: ['potato', 'bread', 'chili', 'garam masala'], image: "https://via.placeholder.com/120", instructions: "Serve spicy potato vada in a pav bun." },
+            { name: "Lassi", ingredients: ['yogurt', 'sugar', 'rose water'], image: "https://via.placeholder.com/120", instructions: "Blend yogurt, sugar, and flavorings to make a cooling drink." },
+            { name: "Kheer", ingredients: ['rice', 'milk', 'sugar', 'cardamom'], image: "https://via.placeholder.com/120", instructions: "Cook rice in milk and sugar until soft and creamy." },
+            { name: "Pulao", ingredients: ['rice', 'vegetables', 'cumin', 'cinnamon'], image: "https://via.placeholder.com/120", instructions: "Cook rice with assorted veggies and spices." },
+
+            { name: "Masala Chai", ingredients: ['tea', 'milk', 'spices', 'sugar'], image: "https://via.placeholder.com/120", instructions: "Boil tea leaves with milk, sugar, and spices." },
+            { name: "Kathi Roll", ingredients: ['flatbread', 'chicken', 'onion', 'yogurt'], image: "https://via.placeholder.com/120", instructions: "Wrap spiced chicken and vegetables in a flatbread." },
+            { name: "Moong Dal Chilla", ingredients: ['yellow lentils', 'onion', 'green chili', 'cumin'], image: "https://via.placeholder.com/120", instructions: "Make a savory pancake from moong dal batter." },
+            { name: "Dhokla", ingredients: ['rice flour', 'fermented batter', 'mustard seeds'], image: "https://via.placeholder.com/120", instructions: "Steam the fermented batter into soft, spongy squares." },
+            { name: "Baingan Bharta", ingredients: ['eggplant', 'tomato', 'garlic', 'onion'], image: "https://via.placeholder.com/120", instructions: "Roast eggplant, mash, and cook with tomatoes and spices." },
+        ];
+
+        // Handle ingredient search
+        $('#ingredientSearch').on('keyup', function () {
+            let searchTerm = $(this).val().toLowerCase();
+            let filteredIngredients = allIngredients.filter(ingredient => ingredient.toLowerCase().includes(searchTerm));
+
+            $('#ingredientList').empty();
+            filteredIngredients.forEach(ingredient => {
+                $('#ingredientList').append(`<li class="cursor-pointer p-2 rounded-md hover:bg-primary hover:text-white transition duration-200">${ingredient}</li>`);
+            });
+        });
+
+        // Add selected ingredient to the selected list
+        $('#ingredientList').on('click', 'li', function () {
+            let ingredient = $(this).text();
+            if (!selectedIngredients.includes(ingredient)) {
+                selectedIngredients.push(ingredient);
+                $('#selectedIngredientsList').append(`
+                    <span class="selected-ingredient">
+                        ${ingredient}
+                        <span class="delete-btn" onclick="removeIngredient('${ingredient}')">X</span>
+                    </span>
+                `);
+            }
+        });
+
+        // Remove ingredient from selected list
+        function removeIngredient(ingredient) {
+            selectedIngredients = selectedIngredients.filter(i => i !== ingredient);
+            $('#selectedIngredientsList').empty();
+            selectedIngredients.forEach(i => {
+                $('#selectedIngredientsList').append(`
+                    <span class="selected-ingredient">
+                        ${i}
+                        <span class="delete-btn" onclick="removeIngredient('${i}')">X</span>
+                    </span>
+                `);
+            });
+        }
+
+        // Get meal recommendations based on selected ingredients
+        $('#getRecommendationsBtn').click(function () {
+            if (selectedIngredients.length === 0) {
+                $('#recommendations').html('Please select some ingredients first.');
+                return;
+            }
+
+            const matchedRecipes = recipes.filter(recipe => {
+                return recipe.ingredients.every(ingredient => selectedIngredients.includes(ingredient));
+            });
+
+            if (matchedRecipes.length > 0) {
+                let mealList = '';
+                matchedRecipes.forEach(recipe => {
+                    mealList += `
+                        <div class="recipe-card">
+                            <img src="${recipe.image}" alt="${recipe.name}" />
+                            <div>
+                                <h6 class="text-xl font-semibold">${recipe.name}</h6>
+                                <p class="text-gray-600">Ingredients: ${recipe.ingredients.join(', ')}</p>
+                                <p class="text-gray-500">Instructions: ${recipe.instructions}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+                $('#recommendations').html(mealList);
+            } else {
+                $('#recommendations').html('No meal recommendations found based on your selected ingredients.');
+            }
+        });
+
+        // Chatbot interaction
+        $('#sendBtn').click(function () {
+            let userMessage = $('#userInput').val();
+            if (userMessage) {
+                $('#chatbox').append(`<p class="user-msg text-right text-green-600">${userMessage}</p>`);
+                $('#userInput').val('');
+                $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);  // Scroll to the bottom
+
+                setTimeout(() => {
+                    let botReply = getBotResponse(userMessage);
+                    $('#chatbox').append(`<p class="bot-msg text-left text-gray-700">${botReply}</p>`);
+                    $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);  // Scroll to the bottom
+                }, 1000);
+            }
+        });
+
+        // Bot response based on user query
+        function getBotResponse(userMessage) {
+            if (userMessage.toLowerCase().includes("how to store") || userMessage.toLowerCase().includes("store") || userMessage.toLowerCase().includes("preserve")) {
+                return "To store ingredients properly, it’s best to keep fruits and vegetables in the fridge, while dry ingredients like pasta should be kept in a cool, dry place. Would you like more tips?";
+            }
+
+            if (userMessage.toLowerCase().includes("how long") || userMessage.toLowerCase().includes("last")) {
+                return "The shelf life of ingredients depends on storage. For example, eggs last 3-5 weeks in the fridge, while lettuce should be consumed within a week for freshness.";
+            }
+
+            return "I'm still learning! How else can I assist you with your meals?";
+        }
+    </script>
+
+</body>
+
+</html>
