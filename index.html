@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory Management System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Inventory Management System</h1>
+
+    <!-- Add Item Section -->
+    <div class="add-item">
+      <input type="text" id="itemName" placeholder="Enter Item Name">
+      <input type="number" id="itemQuantity" placeholder="Enter Quantity">
+      <input type="date" id="entryDate" placeholder="Entry Date">
+      <input type="date" id="expiryDate" placeholder="Expiry Date">
+      <button id="addButton">Add Item</button>
+    </div>
+
+    <!-- Inventory Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Item Name</th>
+          <th>Quantity</th>
+          <th>Entry Date</th>
+          <th>Expiry Date</th>
+          <!--<th>Lower Bound</th> -->
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="inventoryTable">
+        <!-- Rows will be added dynamically -->
+      </tbody>
+    </table>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
