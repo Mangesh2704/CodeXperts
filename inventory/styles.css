@@ -1,0 +1,104 @@
+/* Same as before with no additional changes */
+body {
+    font-family: Arial, sans-serif;
+    /* background-color: #f5f5f5; */
+    margin: 0;
+    padding: 20px;
+  }
+  
+  .container {
+    max-width: 900px;
+    margin: auto;
+    /* background: #fff; */
+    padding: 20px;
+    border-radius: 10px;
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+  }
+  
+  
+
+  h1 {
+    text-align: center;
+    color: darkgreen;
+  }
+  
+  h2 {
+    text-align: center;
+    color: darkgreen;
+  }
+
+  .add-item {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .add-item input {
+    flex: 1;
+    min-width: 150px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .add-item button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .add-item button:hover {
+    background-color: #218838;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  table th {
+    background-color: #218838;
+    color: #fff;
+  }
+  
+  table td button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button.view {
+    background-color: #17a2b8;
+    color: #fff;
+  }
+  
+  button.delete {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  button.view:hover {
+    background-color: #138496;
+  }
+  
+  button.delete:hover {
+    background-color: #c82333;
+  }
+
+  .expiring-soon {
+    background-color: rgba(255, 0, 0, 0.2); /* Light reddish */
+  }
+  

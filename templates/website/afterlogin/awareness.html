@@ -1,0 +1,181 @@
+{% extends './profile.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- ***** Breadcrumb Area Start ***** -->
+<div class="breadcumb-area bg-img bg-gradient-overlay"
+  style="background-image: url({% static 'website/img/bg-img/nocrumbs-slider1.jpg' %});">
+  <div class="container h-100">
+    <div class="row h-100 align-items-center">
+      <div class="col-12">
+        <h2 class="title">Awareness</h2>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="breadcumb--con">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i> Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Awareness</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ***** Breadcrumb Area End ***** -->
+
+<!-- ****** Blog Area Start ******* -->
+<section class="dento--blog-area mt-50">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-lg-8 mb-100">
+        <!-- Blog Details Area -->
+        <div class="blog-details-area">
+          <img src="{% static 'website/img/bg-img/awareness/awareness-1.jpg'%}" alt="">
+
+          <h2 class="post-title">Zero Waste Strategies Tackles Liability Fears in Food Donation</h2>
+          <div class="post-meta">
+            <a href="#"><i class="icon_clock_alt"></i> 28 Sep 2022</a>
+            <!-- <a href="#"><i class="icon_chat_alt"></i> 3 Comments</a> -->
+          </div>
+          <p>Zero Waste Strategies (ZWS), a Texas-based environmental consultancy, is working to clarify legal
+            misconceptions surrounding food donation laws and ensure potential donors are informed of the incentives
+            they’re entitled to. Through this work, they hope to ease fear of liability for food donors and mitigate
+            food waste by redirecting safe and surplus foods to food insecure community members.</p>
+          <p>In 2022, 88.7 million tons of food in the United States went unsold or uneaten, with 32.6 million tons
+            ending up in landfills, according to ReFED’s Food Waste Monitor. And wasted food is wasted nutrients: the
+            U.S. Environmental Protection Agency (EPA) estimates that uneaten food contains enough calories to feed over
+            150 million people each year, exceeding the approximate 35 million food insecure Americans. Now a zero-waste
+            specialist known as the “Texas Trash Talker,” Savage was initially drawn to environmental activism by an
+            Austin Chronicle advertisement offering an opportunity “to fight the man.” She spent nine years grassroots
+            organizing for a nonpartisan environmental organization, contributing to initiatives supporting legislation
+            on issues including electronic waste recycling and curbside residential recycling and composting.</p>
+          <blockquote cite="" class="dento-blockquote d-flex">
+            <div class="icon">
+              <i class="fa fa-quote-left"></i>
+            </div>
+            <div class="text">
+              <h5>A company that specializes in waste reduction, first encountered the frustration of food waste when
+                working as a food industry server in Austin. Throwing away untouched food while others nearby struggled
+                to eat was “like a knife to the heart"</h5>
+              <h6>Stacy Savage / <span>Founder and CEO of ZWS</span></h6>
+            </div>
+          </blockquote>
+          <p>Driving home one evening, it occurred to Savage that she had developed a unique network of government
+            officials, waste management companies, and environmental activists. Savage saw an opportunity in the
+            community she had built and, the next day, launched ZWS.
+            ZWS now helps businesses reduce, reuse, recycle, and compost waste. When conducting waste audits, a primary
+            service offered by ZWS, Savage and her team pick through business’ garbage, recycling, and compost to
+            generate a report analyzing the functionality and efficiency of their waste systems and tailored
+            recommendations for improvement.</p>
+          <img src="{% static 'website/img/bg-img/awareness/awareness-2.jpg' %}" alt="">
+          <p>ZWS also facilitates partnerships with local volunteer-run organizations and food banks that pick-up and
+            redistribute food donations, helping clients ensure that donations are handled properly while in transit and
+            in storage.
+
+            Educating clients on the advantages of food donations helps inspire additional interest and participation,
+            Savage says. Donating surplus foods provides an opportunity for positive promotional exposure, and the
+            possibility of earning a general federal tax deduction or, under some circumstances, an enhanced tax
+            deduction.
+
+            Claiming a deduction is simple, Savage describes, but the key is good recordkeeping. ZWS helps clients track
+            relevant information—including costs and the would-be sales price of donations—ensuring clients get the full
+            deduction they are entitled to..</p>
+        </div>
+
+        <!-- Leave A Reply -->
+        <div class="contact-form mt-30">
+          <h5 class="mb-30">Leave A Reply</h5>
+
+          <!-- Form -->
+          <form action="#" method="post">
+            <div class="row">
+              <div class="col-lg-6">
+                <input type="text" name="message-name" class="form-control mb-30" placeholder="Your Name">
+              </div>
+              <div class="col-lg-6">
+                <input type="email" name="message-email" class="form-control mb-30" placeholder="Your Email">
+              </div>
+              <div class="col-12">
+                <textarea name="message" class="form-control mb-30" placeholder="Your Message"></textarea>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn dento-btn">Reply</button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+      <!-- Dento Sidebar Area -->
+      <div class="col-12 col-lg-4">
+        <div class="dento-sidebar">
+
+          <!-- Single Widget Area -->
+          <div class="single-widget-area search-widget">
+            <form action="#" method="post">
+              <input type="search" name="search" class="form-control" placeholder="Search ...">
+              <button type="submit"><i class="icon_search"></i></button>
+            </form>
+          </div>
+
+          <!-- Single Widget Area -->
+          <div class="single-widget-area news-widget">
+            <h5 class="widget-title">Recent Blogs</h5>
+
+            <!-- Single News Area -->
+            <div class="single-news-area d-flex align-items-center">
+              <div class="blog-thumbnail">
+                <img src="{% static 'website/img/bg-img/awareness/blog-1.jpg' %}" alt="">
+              </div>
+              <div class="blog-content">
+                <a href="https://www.goodhousekeeping.com/life/money/a37964/reduce-food-waste-at-home/"
+                  class="post-title">10 Simple Ways to Reduce Food Waste at Home</a>
+                <span class="post-date">12 May 2021</span>
+              </div>
+            </div>
+
+            <!-- Single News Area -->
+            <div class="single-news-area d-flex align-items-center">
+              <div class="blog-thumbnail">
+                <img src="{% static 'website/img/bg-img/awareness/blog-2.jpg' %}" alt="">
+              </div>
+              <div class="blog-content">
+                <a href="https://www.touchbistro.com/blog/how-to-reduce-food-waste-in-restaurants/"
+                  class="post-title">How to Reduce Food Waste in Restaurants</a>
+                <span class="post-date">28 Sep 2018</span>
+              </div>
+            </div>
+
+            <!-- Single News Area -->
+            <div class="single-news-area d-flex align-items-center">
+              <div class="blog-thumbnail">
+                <img src="{% static 'website/img/bg-img/awareness/blog-3.jpg' %}" alt="">
+              </div>
+              <div class="blog-content">
+                <a href="https://www.homebiogas.com/blog/kitchen-waste-composting/" class="post-title">Kitchen Waste
+                  Composting: Transforming Scraps into Soil Gold</a>
+                <span class="post-date">24 Feb 2024</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Single Widget Area -->
+          <div class="single-widget-area adds-widget">
+            <a href="#"><img class="w-100" src="{% static 'website/img/bg-img/adds.jpg' %}" alt=""></a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ****** Blog Area End ******* -->
+{% endblock %}

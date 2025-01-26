@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Redistribution Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-green-50 text-gray-900 font-sans">
+
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold text-green-700 text-center mb-8">Food Redistribution Platform</h1>
+
+        <!-- Register Form Section -->
+        <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+            <h2 class="text-2xl font-semibold text-green-800 mb-4">Register as Donor or NGO</h2>
+            <form id="registerForm" class="space-y-4">
+                <div>
+                    <input type="text" id="username" placeholder="Username" required
+                        class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600">
+                </div>
+                <div>
+                    <input type="email" id="email" placeholder="Email" required
+                        class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600">
+                </div>
+                <div>
+                    <select id="role" required
+                        class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600">
+                        <option value="donor">Donor</option>
+                        <option value="ngo">NGO</option>
+                    </select>
+                </div>
+                <button type="submit"
+                    class="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200">Register</button>
+            </form>
+        </div>
+
+        <!-- Post Donation Form Section -->
+        <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+            <h2 class="text-2xl font-semibold text-green-800 mb-4">Post a Donation</h2>
+            <form id="donationForm" class="space-y-4">
+                <div>
+                    <input type="email" id="donorEmail" placeholder="Your email" required
+                        class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600">
+                </div>
+                <div>
+                    <input type="text" id="foodType" placeholder="Food Type" required
+                        class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600">
+                </div>
+                <div>
+                    <input type="number" id="quantity" placeholder="Quantity" required
+                        class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600">
+                </div>
+                <div>
+                    <input type="date" id="expirationDate" required
+                        class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600">
+                </div>
+                <div>
+                    <textarea id="description" placeholder="Description (optional)"
+                        class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"></textarea>
+                </div>
+                <button type="submit"
+                    class="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200">Post
+                    Donation</button>
+            </form>
+        </div>
+
+        <!-- Available Donations Section -->
+        <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+            <h2 class="text-2xl font-semibold text-green-800 mb-4">Available Donations</h2>
+            <button onclick="loadDonations()"
+                class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200">Load
+                Donations</button>
+            <ul id="donationsList" class="mt-6 space-y-4"></ul>
+        </div>
+
+        <!-- Request Donation Section -->
+        <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+            <h2 class="text-2xl font-semibold text-green-800 mb-4">Request a Donation</h2>
+            <form id="requestForm" class="space-y-4">
+                <div>
+                    <input type="email" id="ngoEmail" placeholder="NGO Email" required
+                        class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600">
+                </div>
+                <div>
+                    <input type="number" id="donationId" placeholder="Donation ID" required
+                        class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600">
+                </div>
+                <button type="submit"
+                    class="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200">Request
+                    Donation</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        // Register User
+        document.getElementById('registerForm').onsubmit = function (event) {
+            event.preventDefault();
+            let username = document.getElementById('username').value;
+            let email = document.getElementById('email').value;
+            let role = document.getElementById('role').value;
+
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, email, role })
+            }).then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    alert(data.status || data.error || "Registration failed");
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert('Error during registration');
+                });
+        }
+
+        // Post Donation
+        document.getElementById('donationForm').onsubmit = function (event) {
+            event.preventDefault();
+            let donorEmail = document.getElementById('donorEmail').value;
+            let foodType = document.getElementById('foodType').value;
+            let quantity = document.getElementById('quantity').value;
+            let expirationDate = document.getElementById('expirationDate').value;
+            let description = document.getElementById('description').value;
+
+            fetch('/donate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ donor_email: donorEmail, food_type: foodType, quantity, expiration_date: expirationDate, description })
+            }).then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    alert(data.status || data.error || "Donation posting failed");
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert('Error during donation posting');
+                });
+        }
+
+        // Load Donations
+        function loadDonations() {
+            fetch('/donations')
+                .then(response => response.json())
+                .then(donations => {
+                    const donationsList = document.getElementById('donationsList');
+                    donationsList.innerHTML = '';
+                    donations.forEach(donation => {
+                        let li = document.createElement('li');
+                        li.classList.add('bg-gray-100', 'p-4', 'rounded-lg', 'shadow');
+                        li.innerHTML = `
+                            <strong>${donation.food_type}</strong><br>
+                            Quantity: ${donation.quantity}<br>
+                            Expiration: ${donation.expiration_date}<br>
+                            Description: ${donation.description || 'No description'}
+                        `;
+                        donationsList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading donations:', error);
+                    alert('Error loading donations');
+                });
+        }
+
+        // Request Donation
+        document.getElementById('requestForm').onsubmit = function (event) {
+            event.preventDefault();
+            let ngoEmail = document.getElementById('ngoEmail').value;
+            let donationId = document.getElementById('donationId').value;
+
+            fetch('/request_donation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ngo_email: ngoEmail, donation_id: donationId })
+            }).then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    alert(data.status || data.error || "Donation request failed");
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert('Error during donation request');
+                });
+        }
+    </script>
+
+</body>
+
+</html>

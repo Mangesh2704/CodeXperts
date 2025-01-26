@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory & Orders Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .represent {
+            /* float: right; */
+            background-color: #fcc;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .card2 {
+            margin-top: 30px;
+        }
+
+        .add-item {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        .date-buttons {
+            margin-bottom: 10px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            /* Increased chart height */
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Inventory Card -->
+        <div class="card" style="padding-bottom: 35px;">
+            <h1>Inventory Management System</h1>
+
+            <!-- Add Item Section -->
+            <div class="add-item">
+                <input type="text" id="itemName" placeholder="Enter Item Name">
+                <input type="text" id="itemQuantity" placeholder="Enter Quantity">
+                <input type="date" id="entryDate" placeholder="Entry Date">
+                <input type="date" id="expiryDate" placeholder="Expiry Date">
+                <button id="addButton">Add Item</button>
+            </div>
+
+            <!-- Inventory Table -->
+            <table style="margin-bottom: 5px;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>Entry Date</th>
+                        <th>Expiry Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryTable">
+                    <!-- Rows will be added dynamically -->
+                </tbody>
+            </table>
+            <div style="float: right; display: flex; margin: 2px; justify-items: center; align-items: center; gap: 2px;"
+                class="">
+                <div style="margin: 2px;" class="represent"></div>
+                <div style="font-size: small; color: gray;" class="">Items expires in 2 days</div>
+            </div>
+
+        </div>
+
+
+        <div class="card card2">
+            <h1>Inventory Chart</h1>
+            <canvas id="inventoryChart"></canvas>
+            <div id="highlighted-items" class="highlight-note"></div>
+
+
+        </div>
+
+        <!-- Orders Chart Card -->
+        <div class="card card2">
+            <h2>Next Week Estimated Orders</h2>
+            <div class="date-buttons" id="dateButtons"></div>
+
+            <div class="chart-container">
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        const data = {
+            "26 Jan (Sun)": [{ 'category': 'Beverages', 'num_orders': 408 },
+            { 'category': 'Rice Bowl', 'num_orders': 262 },
+            { 'category': 'Starters', 'num_orders': 228 },
+            { 'category': 'Pasta', 'num_orders': 58 },
+            { 'category': 'Sandwich', 'num_orders': 270 },
+            { 'category': 'Biryani', 'num_orders': 134 },
+            { 'category': 'Extras', 'num_orders': 196 },
+            { 'category': 'Pizza', 'num_orders': 292 },
+            { 'category': 'Seafood', 'num_orders': 127 },
+            { 'category': 'Other Snacks', 'num_orders': 65 },
+            { 'category': 'Desert', 'num_orders': 43 },
+            { 'category': 'Soup', 'num_orders': 196 }],
+            "27 Jan (Mon)": [{ 'category': 'Beverages', 'num_orders': 303 },
+            { 'category': 'Rice Bowl', 'num_orders': 95 },
+            { 'category': 'Starters', 'num_orders': 42 },
+            { 'category': 'Pasta', 'num_orders': 26 },
+            { 'category': 'Sandwich', 'num_orders': 229 },
+            { 'category': 'Extras', 'num_orders': 123 },
+            { 'category': 'Pizza', 'num_orders': 27 },
+            { 'category': 'Seafood', 'num_orders': 13 },
+            { 'category': 'Other Snacks', 'num_orders': 14 },
+            { 'category': 'Desert', 'num_orders': 41 },
+            { 'category': 'Biryani', 'num_orders': 55 },
+            { 'category': 'Soup', 'num_orders': 216 }],
+            "28 Jan (Tue)": [{ 'category': 'Beverages', 'num_orders': 296 },
+            { 'category': 'Rice Bowl', 'num_orders': 123 },
+            { 'category': 'Starters', 'num_orders': 26 },
+            { 'category': 'Pasta', 'num_orders': 53 },
+            { 'category': 'Sandwich', 'num_orders': 310 },
+            { 'category': 'Biryani', 'num_orders': 28 },
+            { 'category': 'Extras', 'num_orders': 150 },
+            { 'category': 'Pizza', 'num_orders': 81 },
+            { 'category': 'Seafood', 'num_orders': 27 },
+            { 'category': 'Other Snacks', 'num_orders': 53 },
+            { 'category': 'Desert', 'num_orders': 42 },
+            { 'category': 'Soup', 'num_orders': 107 }],
+            "29 Jan (Wed)": [{ 'category': 'Beverages', 'num_orders': 163 },
+            { 'category': 'Rice Bowl', 'num_orders': 244 },
+            { 'category': 'Starters', 'num_orders': 94 },
+            { 'category': 'Pasta', 'num_orders': 14 },
+            { 'category': 'Sandwich', 'num_orders': 338 },
+            { 'category': 'Biryani', 'num_orders': 41 },
+            { 'category': 'Extras', 'num_orders': 215 },
+            { 'category': 'Pizza', 'num_orders': 81 },
+            { 'category': 'Seafood', 'num_orders': 40 },
+            { 'category': 'Other Snacks', 'num_orders': 54 },
+            { 'category': 'Desert', 'num_orders': 40 },
+            { 'category': 'Soup', 'num_orders': 80 }],
+            "30 Jan (Thu)": [{ 'category': 'Beverages', 'num_orders': 215 },
+            { 'category': 'Rice Bowl', 'num_orders': 328 },
+            { 'category': 'Starters', 'num_orders': 82 },
+            { 'category': 'Pasta', 'num_orders': 28 },
+            { 'category': 'Sandwich', 'num_orders': 312 },
+            { 'category': 'Biryani', 'num_orders': 14 },
+            { 'category': 'Extras', 'num_orders': 177 },
+            { 'category': 'Pizza', 'num_orders': 122 },
+            { 'category': 'Seafood', 'num_orders': 82 },
+            { 'category': 'Other Snacks', 'num_orders': 28 },
+            { 'category': 'Desert', 'num_orders': 80 },
+            { 'category': 'Soup', 'num_orders': 94 }],
+            "31 Jan (Fri)": [{ 'category': 'Beverages', 'num_orders': 285 },
+            { 'category': 'Rice Bowl', 'num_orders': 197 },
+            { 'category': 'Starters', 'num_orders': 14 },
+            { 'category': 'Pasta', 'num_orders': 15 },
+            { 'category': 'Sandwich', 'num_orders': 216 },
+            { 'category': 'Biryani', 'num_orders': 14 },
+            { 'category': 'Extras', 'num_orders': 15 },
+            { 'category': 'Pizza', 'num_orders': 55 },
+            { 'category': 'Seafood', 'num_orders': 69 },
+            { 'category': 'Other Snacks', 'num_orders': 40 },
+            { 'category': 'Desert', 'num_orders': 42 },
+            { 'category': 'Soup', 'num_orders': 27 }],
+            "1 Feb (Sat)": [{ 'category': 'Beverages', 'num_orders': 358 },
+            { 'category': 'Rice Bowl', 'num_orders': 237 },
+            { 'category': 'Starters', 'num_orders': 167 },
+            { 'category': 'Pasta', 'num_orders': 35 },
+            { 'category': 'Sandwich', 'num_orders': 249 },
+            { 'category': 'Biryani', 'num_orders': 36 },
+            { 'category': 'Extras', 'num_orders': 171 },
+            { 'category': 'Pizza', 'num_orders': 101 },
+            { 'category': 'Seafood', 'num_orders': 52 },
+            { 'category': 'Other Snacks', 'num_orders': 50 },
+            { 'category': 'Desert', 'num_orders': 55 },
+            { 'category': 'Soup', 'num_orders': 70 }],
+        };
+
+        const dateButtonsContainer = document.getElementById("dateButtons");
+        const ctx = document.getElementById("barChart").getContext("2d");
+
+        let chartInstance;
+
+        Object.keys(data).forEach(date => {
+            const btn = document.createElement("button");
+            btn.innerText = date;
+            btn.onclick = () => updateChart(date);
+            dateButtonsContainer.appendChild(btn);
+        });
+
+        function updateChart(date) {
+            function destroyChartById(chartId) {
+                const chart = Chart.getChart(chartId); // Get chart by ID
+                if (chart) {
+                    chart.destroy(); // Destroy the chart if it exists
+                }
+            }
+
+            // Example usage: Destroy chart with ID '1'
+            destroyChartById("barChart");
+            const orders = data[date];
+            const categories = orders.map(item => item.category);
+            const numOrders = orders.map(item => item.num_orders);
+
+
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: categories,
+                    datasets: [{
+                        label: `Orders on ${date}`,
+                        data: numOrders,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        updateChart(Object.keys(data)[0]);
+
+        function createChart() {
+            function destroyChartById(chartId) {
+                const chart = Chart.getChart(chartId); // Get chart by ID
+                if (chart) {
+                    chart.destroy(); // Destroy the chart if it exists
+                }
+            }
+
+            // Example usage: Destroy chart with ID '1'
+            destroyChartById("inventoryChart");
+
+            const invent = JSON.parse(localStorage.getItem('inventory'))
+
+            const today = new Date();
+            const labels = invent.map(item => item.name);
+            const quantities = invent.map(item => parseFloat(item.quantity));
+            const highlightItems = [];
+
+            const backgroundColors = invent.map(item => {
+                const expiryDate = new Date(item.expiryDate);
+                const timeDiff = expiryDate - today;
+                const daysUntilExpiry = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+                if (daysUntilExpiry <= 2) {
+                    highlightItems.push(`${item.name} (Expiry: ${item.expiryDate})`);
+                    return "#ff9999"; // Highlight in red
+                } else {
+                    return "#99ccff"; // Default color
+                }
+            });
+
+            const ctx1 = document.getElementById('inventoryChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Inventory Quantity',
+                        data: quantities,
+                        backgroundColor: backgroundColors,
+                        borderColor: '#666',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+        createChart()
+
+        const button1 = document.getElementById('addButton');
+
+        // Add an event listener to the button
+        button1.addEventListener('click', function () {
+            createChart()
+        });
+        // const highlightDiv = document.getElementById('highlighted-items');
+        // if (highlightItems.length > 0) {
+        //     highlightDiv.textContent = `Items nearing expiry: ${highlightItems.join(', ')}`;
+        // }
+
+    </script>
+
+
+</body>
+
+</html>

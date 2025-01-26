@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- ***** Breadcrumb Area Start ***** -->
+<div class="breadcumb-area bg-img bg-gradient-overlay"
+    style="background-image: url({% static 'website/img/bg-img/catalogue.jpg' %});">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-12">
+                <h2 class="title">Login</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="breadcumb--con">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Login</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ***** Breadcrumb Area End ***** -->
+
+<!-- ***** Login Form Start ***** -->
+<section class="dento-contact-area mt-50 mb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-heading">
+                    <h2>Login</h2>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Display messages -->
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %}class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <!-- Login Form -->
+                <form action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="id_username">Username</label>
+                        <input type="text" name="username" class="form-control mb-30" placeholder="Your Username"
+                            value="{{ form.username.value }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_password">Password</label>
+                        <input type="password" name="password" class="form-control mb-30" placeholder="Your Password">
+                    </div>
+
+                    <button type="submit" class="btn dento-btn">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ***** Login Form End ***** -->
+
+{% endblock %}

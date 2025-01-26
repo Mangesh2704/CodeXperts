@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="dento-signup-area mt-50 mb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="signup-form">
+                    <div class="section-heading">
+                        <h2>Verify OTP</h2>
+                        <div class="line"></div>
+                    </div>
+
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                            {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                    <form action="{% url 'verify_otp' %}" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <input type="text" name="otp" class="form-control mb-30" placeholder="Enter OTP"
+                                    required>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn dento-btn">Verify OTP</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description"
+        content="JanAushadhi-Portal offers comprehensive information on generic medicines and their availability. Access medical templates and resources easily.">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Title -->
+    <title>NoCrumbs</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'website/img/core-img/favicon-new.png' %}">
+
+    <!-- Core Stylesheet -->
+    <link rel="stylesheet" href="{% static 'website/style.css' %}">
+
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="preload-content">
+            <div id="dento-load"></div>
+        </div>
+    </div>
+
+    <!-- ***** Header Area Start ***** -->
+    <header class="header-area">
+        <div class="main-header-area">
+            <div class="classy-nav-container breakpoint-off">
+                <div class="container">
+                    <nav class="classy-navbar justify-content-between" id="dentoNav">
+
+                        <!-- Logo -->
+                        <a class="nav-brand" href="{% url 'home' %}">
+                            <img src="{% static 'website/img/core-img/NoCrumbs_logo.png' %}" alt=""
+                                style="width: 120px; height: auto;">
+                        </a>
+
+                        <!-- Navbar Toggler -->
+                        <div class="classy-navbar-toggler">
+                            <span class="navbarToggler"><span></span><span></span><span></span></span>
+                        </div>
+
+                        <!-- Menu -->
+                        <div class="classy-menu">
+
+                            <!-- Close Button -->
+                            <div class="classycloseIcon">
+                                <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                            </div>
+
+                            <!-- Nav Start -->
+                            <div class="classynav">
+                                <ul id="nav">
+                                    <li><a href="{% url 'newhome' %}">Home</a></li>
+                                    <li><a href="http://127.0.0.1:5000/">AI Meal Planner</a></li>
+
+                                    <li><a href="{% url 'awareness' %}">Awareness</a></li>
+                                    <li><a href="http://127.0.0.1:5500/inventory/inventory.html">Inventory</a></li>
+                                    <li><a href=" http://172.31.0.59:5001/">Redistribution</a></li>
+
+                                    <li><a href="{% url 'newcontact' %}">Contact Us</a></li>
+
+                                    {% if user.is_authenticated %}
+                                    <!-- Display username with logout dropdown if the user is authenticated -->
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            {{ user.username }}
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                                        </div>
+                                    </li>
+                                    {% else %}
+                                    <!-- Display Login and Register links if the user is not authenticated -->
+                                    <li><a href="{% url 'login' %}">Login</a></li>
+                                    <li><a href="{% url 'signup' %}">Register</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <!-- Nav End -->
+                        </div>
+
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- ***** Header Area End ***** -->
+
+    <!-- ***** Page Translate Start ***** -->
+    <div id="google_element"></div>
+    <script src="http://translate.google.com/translate_a/element.js?cb=loadGoogleTranslate"></script>
+    <!-- <script>
+    function loadGoogleTranslate() {
+      new google.translate.TranslateElement('google_element');
+    }
+  </script> -->
+    <div id="google_translate_element" style="
+  position: fixed; 
+  top: 0; 
+  right: 0; 
+  margin: 10px;
+  padding-top: 10px; 
+  z-index: 9999;"></div>
+    <style>
+        /* Responsive adjustments */
+        @media (max-width: 767px) {
+            #google_translate_element {
+                width: 150px;
+                top: 5px;
+                right: 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #google_translate_element {
+                width: 120px;
+                top: 0;
+                right: 0;
+                padding: 5px;
+            }
+        }
+    </style>
+    <script src=" https://translate.google.com/translate_a/element.js?cb=loadGoogleTranslate">
+    </script>
+
+    <script>
+        function loadGoogleTranslate() {
+            new google.translate.TranslateElement('google_translate_element');
+        }
+    </script>
+    <!-- ***** Page Translate End ***** -->
+
+    <!-- Page Content Start -->
+    <!-- <div class="container" style="padding-top: 40px;">
+        <h1>Welcome, {{ user.username }}!</h1>
+        <p>You have successfully logged in. This is your profile page where we display your details.</p>
+    </div> -->
+
+    {% block content %}
+    {% endblock %}
+    <!-- Page Content End -->
+
+    <!-- ***** Footer Area Start ***** -->
+    <footer class="footer-area bg-img bg-gradient-overlay"
+        style="background-image: url('{% static 'website/img/bg-img/nocrumbs-footer.jpg' %}');">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="single-footer-widget">
+                        <a href="{% url 'home' %}" class="d-block mb-4"><img
+                                src="{% static 'website/img/core-img/nocrumbsfooter.png' %}" style="width: 60%;"
+                                alt=""></a>
+                        <p>Our mission is to create a world where food is valued, abundance meets need, and hunger is
+                            eradicated
+                            through innovation and collaboration.</p>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg">
+                    <div class="single-footer-widget">
+                        <h5 class="widget-title">Contact Us</h5>
+                        <ul class="opening-hours">
+                            <li>Xavier Institute of Engineering, Mahim, Mumbai</li>
+                            <li>+91 9876543210</li>
+                            <li>nocrumbs30@gmail.com</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg">
+                    <div class="single-footer-widget">
+                        <h5 class="widget-title">Quick Link</h5>
+                        <nav>
+                            <ul class="quick-links">
+                                <li><a href="#">Home</a></li>
+                                <li><a href="http://127.0.0.1:5000">AI Meal Planner</a></li>
+                                <li><a href="{% url 'awareness' %}">Food Awareness</a></li>
+                                <li><a href="http://127.0.0.1:5500/inventory/inventory.html">Inventory</a></li>
+                                <li><a href="http://172.31.0.59:5001/">Redistribution</a></li>
+                                <li><a href="{% url 'newcontact' %}">Contact Us</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg">
+                    <div class="single-footer-widget">
+                        <h5 class="widget-title">Any Queries?</h5>
+                        <p>Don't hesitate to ask anything you want</p>
+                        <div class="footer-newsletter-form">
+                            <input type="text" name="text" value="" placeholder="Comments">
+                        </div>
+                        <div class="footer-newsletter-form">
+                            <form action="#" method="post">
+                                <input type="email" name="nl-email" value="" placeholder="Email Address">
+                                <button type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copywrite Area -->
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="copywrite-content">
+                        <p> NoCrumbs |
+                            Copyright &copy;
+                            <script>document.write(new Date().getFullYear());</script> All rights reserved.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ***** Footer Area End ***** -->
+
+    <!-- ******* All JS ******* -->
+    <script src="{% static 'website/js/jquery.min.js' %}"></script>
+    <script src="{% static 'website/js/popper.min.js' %}"></script>
+    <script src="{% static 'website/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'website/js/dento.bundle.js' %}"></script>
+    <script src="{% static 'website/js/default-assets/active.js' %}"></script>
+
+</body>
+
+</html>
